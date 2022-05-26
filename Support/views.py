@@ -1,9 +1,11 @@
 from rest_framework import viewsets
 from rest_framework import permissions
-from .models import Ticket
-from .serializers import TicketSerializer
+from .models import Ticket, TicketMessage
+from .serializers import TicketSerializer, TicketMessageSerializer
 from .permissions import IsManager, IsOwner, IsManagerOrAdmin, IsOwnerOrManagerOrAdmin
+from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
 
 
 class TicketViewSet(viewsets.ModelViewSet):
@@ -22,6 +24,35 @@ class TicketViewSet(viewsets.ModelViewSet):
         else:
             self.permission_classes = (permissions.AllowAny,)
         return super(self.__class__, self).get_permissions()
+
+    @action(methods=['post', 'get'], permission_classes=[IsOwnerOrManagerOrAdmin], detail=True)
+    def messages(self, request, pk=None):
+        if self.request.method == 'POST':
+            context = {
+                "request": self.request,
+            }
+            request.data._mutable = True
+            request.data['ticket'] = self.kwargs['pk']
+            request.data._mutable = False
+            serializer = TicketMessageSerializer(data=request.data, context=context)
+            if serializer.is_valid():
+                serializer.save()
+            return Response(serializer.data)
+        else:
+            queryset = TicketMessage.objects.filter(ticket=self.kwargs['pk']).order_by('created_at')
+            serializer = TicketMessageSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+
+# class TicketMessageViewSet(viewsets.ModelViewSet):
+#     """A viewset for ticket messages"""
+#     serializer_class = TicketMessageSerializer
+#
+#     def get_queryset(self):
+#         print(self.request.data)
+#         return TicketMessage.objects.all()
+
+
 
 
 

@@ -22,10 +22,10 @@ class IsOwnerOrManagerOrAdmin(permissions.BasePermission):
     """
     Custom permission to only allow managers/admins/owners of an object to see/edit it.
     """
-    def has_object_permission(*args):
-        return bool(IsManager.has_permission(*args[:-1]) or
-                    IsOwner.has_object_permission(*args) or
-                    permissions.IsAdminUser.has_permission(*args[:-1]))
+    def has_object_permission(self, request, view, obj):
+        return (IsManager.has_permission(self, request, view) or
+                    IsOwner.has_object_permission(self, request, view, obj) or
+                    permissions.IsAdminUser.has_permission(self, request, view))
 
 
 class IsManagerOrAdmin(permissions.BasePermission):

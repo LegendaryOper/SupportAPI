@@ -1,0 +1,23 @@
+[
+  {
+    "model": "Support.StatusForTicket",
+    "pk": 1,
+    "fields": {
+      "name": "open"
+    }
+  },
+  {
+    "model": "Support.StatusForTicket",
+    "pk": 2,
+    "fields": {
+      "name": "in process"
+    }
+  },
+  {
+    "model": "Support.StatusForTicket",
+    "pk": 3,
+    "fields": {
+      "name": "closed"
+    }
+  }
+]

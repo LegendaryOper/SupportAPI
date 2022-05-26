@@ -24,3 +24,9 @@ class Ticket(models.Model):
     user = models.ForeignKey(User, verbose_name='user', on_delete=models.CASCADE)
 
 
+class TicketMessage(models.Model):
+    """A message for ticket model"""
+    message = models.CharField(verbose_name='description', max_length=500)
+    ticket = models.ForeignKey(Ticket, verbose_name='ticket', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name='user', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='created_at')
