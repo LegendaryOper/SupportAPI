@@ -24,8 +24,8 @@ class IsOwnerOrManagerOrAdmin(permissions.BasePermission):
     """
     def has_object_permission(self, request, view, obj):
         return (IsManager.has_permission(self, request, view) or
-                    IsOwner.has_object_permission(self, request, view, obj) or
-                    permissions.IsAdminUser.has_permission(self, request, view))
+                IsOwner.has_object_permission(self, request, view, obj) or
+                permissions.IsAdminUser.has_permission(self, request, view))
 
 
 class IsManagerOrAdmin(permissions.BasePermission):
