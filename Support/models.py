@@ -15,6 +15,9 @@ class StatusForTicket(models.Model):
     ]
     name = models.CharField(verbose_name='name', max_length=30, choices=TICKET_STATUS_CHOICES)
 
+    def __str__(self):
+        return self.name
+
 
 class Ticket(models.Model):
     """A Ticket model"""
