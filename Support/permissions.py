@@ -30,7 +30,7 @@ class IsOwnerOrManagerOrAdmin(permissions.BasePermission):
 
 class IsManagerOrAdmin(permissions.BasePermission):
     """
-    Custom permission to only allow managers of an object to see/edit it.
+    Custom permission to only allow managers/admins to see/edit it.
     """
     def has_permission(*args):
         return bool(IsManager.has_permission(*args) or

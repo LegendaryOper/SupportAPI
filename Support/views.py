@@ -1,12 +1,12 @@
 from rest_framework import viewsets
 from rest_framework import permissions
-from .models import Ticket, TicketMessage, StatusForTicket
+from .models import Ticket, TicketMessage
 from .serializers import TicketSerializer, TicketMessageSerializer
-from .permissions import IsManager, IsOwner, IsManagerOrAdmin, IsOwnerOrManagerOrAdmin
+from .permissions import IsManagerOrAdmin, IsOwnerOrManagerOrAdmin
 from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
+
 from rest_framework.response import Response
-from .services import *
+from .services import add_to_request_data, send_email
 
 
 class TicketViewSet(viewsets.ModelViewSet):
@@ -27,6 +27,7 @@ class TicketViewSet(viewsets.ModelViewSet):
             self.permission_classes = (permissions.AllowAny,)
         return super(self.__class__, self).get_permissions()
 
+    # an action that handle requests to ticket/id/messages/
     @action(methods=['post', 'get'], detail=True)
     def messages(self, request, pk=None):
         self.check_permissions(request)
@@ -45,13 +46,15 @@ class TicketViewSet(viewsets.ModelViewSet):
             serializer = TicketMessageSerializer(queryset, many=True)
             return Response(serializer.data)
 
+    # patch http method
     def partial_update(self, request, *args, **kwargs):
-        changed_status_id = request.data.get('status', False)
-        changed_status = get_object_or_404(StatusForTicket, pk=changed_status_id)
-        if changed_status is not False:
-            email_to_send = get_ticket_user_email(self.kwargs['pk'])
-            send_email_about_status_change(changed_status, email_to_send)
+        send_email(request, self.kwargs['pk'])
         return super().partial_update(request, *args, **kwargs)
+
+    # put http method
+    def update(self, request, *args, **kwargs):
+        send_email(request, self.kwargs['pk'])
+        return super().update(request, *args, **kwargs)
 
 
 
