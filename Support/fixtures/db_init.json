@@ -1,5 +1,13 @@
 [
   {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+      "name": "manager",
+      "permissions": []
+    }
+  },
+  {
     "model": "Support.StatusForTicket",
     "pk": 1,
     "fields": {
