@@ -23,7 +23,7 @@ class Ticket(models.Model):
     """A Ticket model"""
     header = models.CharField(verbose_name='header', max_length=30)
     description = models.CharField(verbose_name='description', max_length=500)
-    status = models.ForeignKey(StatusForTicket, verbose_name='status', on_delete=models.CASCADE)
+    status = models.ForeignKey(StatusForTicket, verbose_name='status', on_delete=models.CASCADE, default=1)
     user = models.ForeignKey(User, verbose_name='user', on_delete=models.CASCADE)
 
 
